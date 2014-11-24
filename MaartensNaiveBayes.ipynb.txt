@@ -1,0 +1,198 @@
+{
+ "metadata": {
+  "name": "",
+  "signature": "sha256:d85015e7e001cf080670a35d36f77c0ac9f484563ec6cbe6e5cc8adce795e459"
+ },
+ "nbformat": 3,
+ "nbformat_minor": 0,
+ "worksheets": [
+  {
+   "cells": [
+    {
+     "cell_type": "heading",
+     "level": 1,
+     "metadata": {},
+     "source": [
+      "Naive Bayes Classification"
+     ]
+    },
+    {
+     "cell_type": "heading",
+     "level": 2,
+     "metadata": {},
+     "source": [
+      "Training"
+     ]
+    },
+    {
+     "cell_type": "markdown",
+     "metadata": {},
+     "source": [
+      "We train a classifier for each  class in the Reuters collection."
+     ]
+    },
+    {
+     "cell_type": "markdown",
+     "metadata": {},
+     "source": [
+      "First we compute for each category the priors.\n",
+      "\n",
+      "We only use documents in the training test set."
+     ]
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "import math\n",
+      "import nltk \n",
+      "from nltk.corpus import reuters\n",
+      "\n",
+      "# Number of Training Docs\n",
+      "NumberOfDocs=len([x for x in reuters.fileids() if x.startswith('train')])\n",
+      "\n",
+      "# Dict with for each category the number of training docs.\n",
+      "NrDocsPerCategory= { cat:len([doc for doc in reuters.fileids(cat) if x.startswith('train') ]) for cat in reuters.categories()}\n",
+      "\n",
+      "# Prior[cat] = the prior probability of category cat\n",
+      "Priors = {cat:  NrDocsPerCategory[cat]/float(NumberOfDocs) for cat in NrDocsPerCategory.keys()}\n",
+      "\n",
+      "# test\n",
+      "#Priors \n",
+      "\n",
+      "LogPriors = {cat:  math.log(NrDocsPerCategory[cat]/float(NumberOfDocs),2) for cat in reuters.categories()}\n",
+      "#LogPriors"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 64
+    },
+    {
+     "cell_type": "markdown",
+     "metadata": {},
+     "source": [
+      "Now we compute for each category the conditional probabilities."
+     ]
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "# First we count the total number of words\n",
+      "\n",
+      "'Number of categories is '+ str(len(Priors))\n",
+      "\n",
+      "# try it out \n",
+      "#reuters.fileids('zinc')\n",
+      "#ZincFD = nltk.FreqDist(reuters.words([x for x in reuters.fileids('zinc') if x.startswith('train')]))\n",
+      "#ZincFD.items()[:100]\n",
+      "\n",
+      "NrWordsPerCategory ={cat:len(reuters.words(\n",
+      "    [x for x in reuters.fileids(cat) if x.startswith('train')])) for cat in reuters.categories()}\n",
+      "\n",
+      "#test NrWordsPerCategory.items()[:10]\n",
+      " "
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 66
+    },
+    {
+     "cell_type": "markdown",
+     "metadata": {},
+     "source": [
+      "Now we create the conditional frequencies and the  conditional probabilities."
+     ]
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "# \n",
+      "CondFreqPerCategory={cat:nltk.FreqDist(\n",
+      "    reuters.words([x for x in reuters.fileids(cat) if x.startswith('train')]))\n",
+      "                     for cat in reuters.categories()}\n",
+      "\n",
+      "# Test CondFreqPerCategory['gold'].items()\n",
+      "\n",
+      "# Test Now turn the counts into log probabilities\n",
+      "\n",
+      "#GoldTest={term:math.log(CondFreqPerCategory['gold'][term]/float(NrWordsPerCategory['gold']),2) for term in CondFreqPerCategory['gold'] }\n",
+      "#GoldTest\n",
+      "\n",
+      "# just for readability\n",
+      "def FreqsToProbs(cat):\n",
+      "    return {term:math.log(CondFreqPerCategory[cat][term]/float(NrWordsPerCategory[cat]),2) \n",
+      "                 for term in CondFreqPerCategory[cat] }\n",
+      "    \n",
+      "# CondLogProbsPerCategory[cat] returns a dict which gives P(t|cat) for each t occuring in cat    \n",
+      "CondLogProbsPerCategory = {cat:FreqsToProbs(cat) for cat in NrDocsPerCategory.keys()}\n",
+      "\n",
+      "#test CondLogProbsPerCategory['gold']"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 61
+    },
+    {
+     "cell_type": "heading",
+     "level": 1,
+     "metadata": {},
+     "source": [
+      "Probabilities for the complements of the categories"
+     ]
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [],
+     "language": "python",
+     "metadata": {},
+     "outputs": []
+    },
+    {
+     "cell_type": "heading",
+     "level": 2,
+     "metadata": {},
+     "source": [
+      "Feature selection \n",
+      "\n",
+      "\n",
+      " \n",
+      "\n",
+      " "
+     ]
+    },
+    {
+     "cell_type": "markdown",
+     "metadata": {},
+     "source": [
+      "Do simple feature selection by removing words occuring in (almost) all documents and hapaxes.\n",
+      "\n",
+      "Do more elaborate feauture selction using mutual information."
+     ]
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [],
+     "language": "python",
+     "metadata": {},
+     "outputs": []
+    },
+    {
+     "cell_type": "heading",
+     "level": 1,
+     "metadata": {},
+     "source": [
+      "Smoothing"
+     ]
+    }
+   ],
+   "metadata": {}
+  }
+ ]
+}
