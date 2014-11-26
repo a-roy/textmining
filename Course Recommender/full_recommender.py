@@ -393,9 +393,9 @@ class GradeItem(object):
             test.append("activity")
         if not (type(self.partial) is str and len(self.partial) > 0):
             test.append("partial")
-        if not (type(self.semester) in (1, 2)):
+        if not (type(self.semester) in [1, 2]):
             test.append("semester")
-        if not (type(self.period) in ('main', 'intensive')):
+        if not (type(self.period) in ['main', 'intensive']):
             test.append("period")
         if not (type(self.status) is str and len(self.status) > 0):
             test.append("status")
