@@ -5,7 +5,7 @@ from full_recommender import *
 #### Please change the values below as needed ##################################
 
 # Please provide the directory below (use '.' for current working directory)
-grade_dir = r"./Grade_Data/Data Text mining 2013-2014ANO.xls"
+grade_dir = r"mac/testing.xls"
 
 # Please provide a name for the recommender
 recommender_name = r"First Recommender"
